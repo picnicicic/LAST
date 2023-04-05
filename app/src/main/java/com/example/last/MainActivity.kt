@@ -31,5 +31,35 @@ class MainActivity : AppCompatActivity() {
         val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
 
         bottomNav.setupWithNavController(navController)
+
+        setFrag(0)
+
+        btn_fragment1.setOnclickListener {
+            setFrag(0)
+        }
+        btn_fragment2.setOnclickListener {
+            setFrag(1)
+        }
+        btn_fragment3.setOnclickListener {
+            setFrag(2)
+        }
+
+    }
+
+    private fun setFrag(fragNum: Int) {
+        val ft = supportFragmentManager.beginTransaction()
+        when(fragNum)
+        {
+            0 -> {
+                ft.replace(R.id.main_frame, Fragment1()).commit()
+            }
+            1 -> {
+                ft.replace(R.id.main_frame, Fragment2()).commit()
+            }
+            2 -> {
+                ft.replace(R.id.main_frame, Fragment3()).commit()
+            }
+        }
+
     }
 }
