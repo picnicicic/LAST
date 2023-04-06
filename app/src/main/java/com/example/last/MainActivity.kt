@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         //앱바 설정 객체
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.profileFragment, R.id.settingFragment))
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.profileFragment, R.id.settingFragment, R.id.memoFragment))
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
@@ -33,16 +33,6 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setupWithNavController(navController)
 
         setFrag(0)
-
-        btn_fragment1.setOnclickListener {
-            setFrag(0)
-        }
-        btn_fragment2.setOnclickListener {
-            setFrag(1)
-        }
-        btn_fragment3.setOnclickListener {
-            setFrag(2)
-        }
 
     }
 

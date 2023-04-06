@@ -20,4 +20,9 @@
         android:name="com.example.last.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/memoFragment"
+        android:name="com.example.last.MemoFragment"
+        android:label="fragment_memo"
+        tools:layout="@layout/fragment_memo" />
 </navigation>
