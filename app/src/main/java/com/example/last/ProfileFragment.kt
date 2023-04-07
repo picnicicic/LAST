@@ -42,16 +42,24 @@ class ProfileFragment : Fragment() {
 
         calendarView.setOnDateChangeListener(object :OnDateChangeListener {
             override fun onSelectedDayChange(p0: CalendarView, p1: Int, p2: Int, p3: Int) {
-               if(selectday.equals(p0.toString()+p1.toString()+p3.toString())) {
-                   startActivity(Intent(requireContext(), MemoActivity::class.java))
+               if(selectday.equals(String.format("%04d%02d%02d", p1, p2 + 1, p3))) {
+                   val date = p1.toString() + "/" + p2.toString() + "/" +p3.toString()
+                   val intent = Intent(requireContext(), MemoActivity::class.java)
+                   intent.putExtra("date",date)
+                   startActivity(intent)
+               } else {
+                   val calendar = Calendar.getInstance()
+                   calendar.set(p1, p2 ,p3)
+                   val day = calendar.timeInMillis.toString().substring(0, 6)
+                   adapter.setList(DBLoader(requireContext()).memoList(day.toLong()))
+                   selectday = String.format("%04d%02d%02d", p1 ,p2 + 1, p3)
                }
-                val calendar = Calendar.getInstance()
-                calendar.set(p1, p2 ,p3)
-                val day = calendar.timeInMillis.toString().substring(0, 6)
-                adapter.setList(DBLoader(requireContext()).memoList(day.toLong()))
             }
         })
-        adapter.setList(
+        val date = Date()
+        date.time = calendarView.date
+        selectday = SimpleDateFormat("yyyyMMdd").format(date)
+            adapter.setList(
             DBLoader(requireContext()).memoList(
                 calendarView.date.toString().substring(0, 6).toLong()))
     }
