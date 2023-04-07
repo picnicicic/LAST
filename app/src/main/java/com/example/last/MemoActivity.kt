@@ -9,12 +9,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.last.calendermemo.db.DBLoader
 import com.example.last.calendermemo.model.Memo
+import java.util.Calendar
 
 class MemoActivity: AppCompatActivity() {
 
     private lateinit var edit_title: EditText
     private lateinit var edit_memo: EditText
     private var item: Memo? = null
+    private var date: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,15 +27,22 @@ class MemoActivity: AppCompatActivity() {
         edit_memo = findViewById(R.id.edit_memo)
         edit_title = findViewById(R.id.edit_title)
 
-        val intent = intent.extras
-        if (intent != null)
-            item = intent.getSerializable("item") as Memo
-        edit_memo.setText(item?.memo)
-        edit_title.setText(item?.memo)
+        date = intent!!.getStringExtra("date")
+        item = intent.getSerializableExtra("item") as Memo?
+        if (item != null) {
+            edit_memo.setText(item?.memo)
+            edit_title.setText(item?.memo)
+        }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_memo, menu)
+        val deleteItem = menu!!.findItem(R.id.action_delete)
+        if(this.item == null) {
+            deleteItem.isVisible = false
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -47,12 +56,25 @@ class MemoActivity: AppCompatActivity() {
                 val title = edit_title.text.toString()
                 val memo = edit_memo.text.toString()
                 if (!memo.equals("")) {
+                    var calendar : Calendar? = null
+                    if(date != null) {
+                        calendar = Calendar.getInstance()
+                        val date = this.date!!.split("/")
+                        calendar.set(date[0].toInt(), date[1].toInt(), date[2].toInt())
+                    }
                     if (this.item != null) {
-
+                        DBLoader(applicationContext).update(this.item!!.id, title, memo)
+                        finish()
                     } else {
-                        DBLoader(applicationContext).save(title, memo)
+                        DBLoader(applicationContext).save(title, memo, calendar)
                         finish()
                     }
+                }
+            }
+            R.id.action_delete -> {
+                if(this.item != null) {
+                    DBLoader(applicationContext).delete(this.item!!.id)
+                    finish()
                 }
             }
         }

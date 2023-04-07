@@ -18,8 +18,13 @@ class DBLoader(context: Context) {
         db = DBHelper(context);
     }
 
-    fun save(title:String, memo:String) {
-        val calendar = Calendar.getInstance()
+    fun save(title:String, memo:String, getCalendar: Calendar?) {
+        val calendar:Calendar
+        if(getCalendar == null) {
+            calendar = Calendar.getInstance()
+        } else {
+            calendar = getCalendar
+        }
         val contentValues = ContentValues()
         contentValues.put("title",title)
         contentValues.put("memo",memo)
@@ -33,6 +38,14 @@ class DBLoader(context: Context) {
         db.writableDatabase.delete("note", "id=?", arrayOf(id.toString()))
         db.close()
         Toast.makeText(context,"삭제됨", Toast.LENGTH_SHORT).show()
+    }
+
+    fun update(id: Int, title: String, memo: String) {
+        val contentValues = ContentValues()
+        contentValues.put("title",title)
+        contentValues.put("memo",memo)
+        db.writableDatabase.update("note",contentValues, "id=?", arrayOf(id.toString()))
+        db.close()
     }
 
     @SuppressLint("Range")

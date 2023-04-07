@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.last.calendermemo.adapter.MemoAdapter
@@ -16,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class MemoFragment : Fragment() {
 
     private lateinit var adapter: MemoAdapter
+    private lateinit var text_msg: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +31,7 @@ class MemoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val btnAdd = view.findViewById<FloatingActionButton>(R.id.btn_add)
+        text_msg = view.findViewById<TextView>(R.id.text_msg)
         btnAdd.setOnClickListener {
             startActivity(Intent(requireContext(), MemoActivity::class.java))
         }
@@ -43,5 +46,10 @@ class MemoFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         adapter.setList(DBLoader(requireContext()).memoList(null))
+        if(adapter.itemCount > 0) {
+            text_msg.visibility = View.INVISIBLE
+        } else {
+            text_msg.visibility = View.VISIBLE
+        }
     }
 }
